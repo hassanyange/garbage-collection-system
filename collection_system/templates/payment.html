@@ -1,0 +1,16 @@
+<!-- payment.html -->
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Payment for Garbage Collection Request</h2>
+  <p>Request Details:</p>
+  <p>Location: {{ request_obj.location }}</p>
+  <!-- Add other request details as needed -->
+  <form method="post">
+    {% csrf_token %}
+    <!-- Payment form fields go here -->
+    <button type="submit" class="btn btn-primary">Make Payment</button>
+  </form>
+</div>
+{% endblock %}
