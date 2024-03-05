@@ -17,3 +17,9 @@ class CustomerRequest(models.Model):
     name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=15)
     payment_status = models.BooleanField(default=False)    
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    location = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.user.username

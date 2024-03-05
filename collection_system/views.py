@@ -1,21 +1,26 @@
 from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import CompanyForm, CustomerRequestForm
+from .forms import CompanyForm, CustomerRequestForm, LoginForm, RegistrationForm
 from .models import GarbageCollectionRequest, CustomerRequest,Company
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm
+from django.contrib.auth.models import User
+from .models import UserProfile
+from .forms import UserProfileForm
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def home(request):
     # Logic to display home page
     return render(request, 'home.html')
-
+@login_required
 def make_request(request):
     if request.method == 'POST':
         # Logic to handle form submission and create garbage collection request
         return render(request, 'success.html')
     else:
         return render(request, 'make_request.html')
-
-
 
 
 
@@ -65,3 +70,37 @@ def company_detail(request, company_id):
     # company = Company.objects.get(id=company_id)
     # return render(request, 'company_detail.html', {'company': company})
     return render(request, 'company_detail.html')
+
+from django.contrib.auth import authenticate, login
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            messages.success(request, 'You have successfully logged in!')
+            return redirect('home')
+        else:
+            messages.error(request, 'Invalid username or password.')
+    return render(request, 'login.html')
+
+def register_view(request):
+    if request.method == 'POST':
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        email = request.POST['email']
+        password = request.POST['password']
+        location = request.POST['location']
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'Email is already taken.')
+        else:
+            user = User.objects.create_user(username=email, email=email, password=password, first_name=first_name, last_name=last_name)
+            UserProfile.objects.create(user=user, location=location)
+            messages.success(request, 'You have successfully registered!')
+            return redirect('login')
+    return render(request, 'register.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')

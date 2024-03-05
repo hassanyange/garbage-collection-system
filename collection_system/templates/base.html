@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-RE5pPc0i+ucuRzYszHb4/ktL6pBA+Pq2E23gYWsTn0L3D2JkCWG6Tkf0Ll2yPCwXFqAgcJ4LaZqTFYFTb9cOWQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!-- Custom CSS -->
-  <link href="{% static '/css/styles.css' %}" rel="stylesheet">
+  <link href="{% static 'css/styles.css' %}" rel="stylesheet">
 </head>
 <body>
 
@@ -28,10 +28,20 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'home' %}">Home</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'make_request' %}">Make Request</a>
-        </li>
+      
         <!-- Add more navigation links as needed -->
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'login' %}">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'register' %}">Register</a>
+        </li>
+        {% endif %}
       </ul>
     </div>
   </div>
@@ -40,6 +50,7 @@
 {% block content %}
 <!-- Content goes here -->
 {% endblock %}
+<br><br><br><br>
 <footer class="bg-dark text-white fixed-bottom">
   <div class="container py-3">
     <div class="text-center">

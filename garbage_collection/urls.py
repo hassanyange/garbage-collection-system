@@ -30,6 +30,6 @@ if settings.DEBUG:
 
 
 
-admin.site.site_header = "MUNICIPAL GABBAGE COLLECTION SYSTEM"
-admin.site.index_title = "Welcome to Municipal Gabbage Collection System"
+admin.site.site_header = "MUNICIPAL GARBAGE COLLECTION SYSTEM"
+admin.site.index_title = "Welcome to Municipal Garbage Collection System"
 admin.site.site_title = "Collection System"
