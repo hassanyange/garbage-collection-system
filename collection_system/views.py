@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import CompanyForm, CustomerRequestForm, LoginForm, RegistrationForm
-from .models import GarbageCollectionRequest, CustomerRequest,Company
+from .models import GarbageCollectionRequest, CustomerRequest,Company, CompanyProfile
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm
 from django.contrib.auth.models import User
@@ -67,9 +67,13 @@ def payment(request, request_id):
     return render(request, 'payment.html', {'request_obj': request_obj})
 
 def company_detail(request, company_id):
-    # company = Company.objects.get(id=company_id)
-    # return render(request, 'company_detail.html', {'company': company})
+    company = Company.objects.get(id=company_id)
+    return render(request, 'company_detail.html', {'company': company})
     return render(request, 'company_detail.html')
+
+def home(request):
+    company_profiles = CompanyProfile.objects.all()
+    return render(request, 'home.html', {'company_profiles': company_profiles})
 
 from django.contrib.auth import authenticate, login
 def login_view(request):
