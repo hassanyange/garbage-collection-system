@@ -5,21 +5,19 @@
 <div class="container mt-4" style="background-image: url('{{ company.background_image.url }}'); background-size: cover;">
   <div class="row">
     <div class="col-md-8">
-      <!-- Company Information -->
+    
       <h2>{{ company.name }}</h2>
       <p><strong>About the Company:</strong> {{ company.description }}</p>
       <p><strong>Location:</strong> {{ company.location }}</p>
       <p><strong>Types of Garbage Collected:</strong> {{ company.types_of_garbage }}</p>
       <p><strong>Working Hours:</strong> {{ company.working_hours }}</p>
-      
-      <!-- Contact Information -->
+
       <div class="contact-info mt-4">
         <h3>Contact Information</h3>
         <ul class="list-unstyled">
           <li><i class="fas fa-envelope"></i> Email: {{ company.contact_email }}</li>
           <li><i class="fas fa-phone"></i> Phone: {{ company.contact_phone }}</li>
           <li><i class="fab fa-facebook"></i> Facebook: <a href="#">Company Facebook Page</a></li>
-          <!-- Add more social media links as needed -->
         </ul>
       </div>
       
