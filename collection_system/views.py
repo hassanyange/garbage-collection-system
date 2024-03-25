@@ -1,26 +1,22 @@
-from django.shortcuts import render
-from django.shortcuts import render, redirect
+
+from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib import messages
 from .forms import CompanyForm, CustomerRequestForm, LoginForm, RegistrationForm
-from .models import GarbageCollectionRequest, CustomerRequest,Company, CompanyProfile
+from .models import  CustomerRequest,Company
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm
 from django.contrib.auth.models import User
 from .models import UserProfile
 from .forms import UserProfileForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
 
 @login_required
 def home(request):
     # Logic to display home page
     return render(request, 'home.html')
-@login_required
-def make_request(request):
-    if request.method == 'POST':
-        # Logic to handle form submission and create garbage collection request
-        return render(request, 'success.html')
-    else:
-        return render(request, 'make_request.html')
+
+
 
 
 
@@ -35,7 +31,7 @@ def register_company(request):
         form = CompanyForm()
     return render(request, 'register_company.html', {'form': form})
 
-
+@login_required
 def make_request(request):
     if request.method == 'POST':
         form = CustomerRequestForm(request.POST)
@@ -65,17 +61,15 @@ def payment(request, request_id):
         messages.success(request, 'Payment successful!')
         return redirect('home')  # Redirect to home page after successful payment
     return render(request, 'payment.html', {'request_obj': request_obj})
-
 def company_detail(request, company_id):
-    company = Company.objects.get(id=company_id)
+    company = get_object_or_404(Company, id=company_id)
     return render(request, 'company_detail.html', {'company': company})
-    return render(request, 'company_detail.html')
 
 def home(request):
-    company_profiles = CompanyProfile.objects.all()
-    return render(request, 'home.html', {'company_profiles': company_profiles})
+    companies = Company.objects.all()
+    return render(request, 'home.html', {'companies': companies})
 
-from django.contrib.auth import authenticate, login
+
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']

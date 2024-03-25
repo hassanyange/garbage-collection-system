@@ -12,10 +12,17 @@
 
   <!-- Custom CSS -->
   <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+
+  <style>   
+  body {
+    background-color: rgb(240, 232, 232); /* Change this color to your desired background color */
+}
+</style>
+
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <div class="container">
     <a class="navbar-brand" href="#">
       <i class="fas fa-trash-alt"></i> Garbage Collection System
@@ -26,20 +33,20 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'home' %}">Home</a>
+          <a class="nav-link text-white" href="{% url 'home' %}">Home</a>
         </li>
       
         <!-- Add more navigation links as needed -->
         {% if user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+          <a class="nav-link text-white" href="{% url 'logout' %}">Logout</a>
         </li>
         {% else %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'login' %}">Login</a>
+          <a class="nav-link text-white" href="{% url 'login' %}">Login</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'register' %}">Register</a>
+          <a class="nav-link text-white" href="{% url 'register' %}">Register</a>
         </li>
         {% endif %}
       </ul>
@@ -51,7 +58,7 @@
 <!-- Content goes here -->
 {% endblock %}
 <br><br><br><br>
-<footer class="bg-dark text-white fixed-bottom">
+<footer class="bg-primary text-white fixed-bottom">
   <div class="container py-3">
     <div class="text-center">
       <span>© {% now "Y" %} All rights reserved</span>

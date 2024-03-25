@@ -18,6 +18,7 @@ class CustomerRequestForm(forms.ModelForm):
     class Meta:
         model = CustomerRequest
         fields = ['location', 'name', 'phone_number']
+        
 class RegistrationForm(UserCreationForm):
     first_name = forms.CharField(max_length=100)
     last_name = forms.CharField(max_length=100)

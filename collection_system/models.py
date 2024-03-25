@@ -1,9 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-class GarbageCollectionRequest(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    request_date = models.DateField(auto_now_add=True)
+
 
 class CompanyProfile(models.Model):
     company_name = models.CharField(max_length=50)
@@ -14,6 +12,8 @@ class CompanyProfile(models.Model):
         return self.company_name
 
     
+
+
 class Company(models.Model):
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
@@ -21,19 +21,23 @@ class Company(models.Model):
     types_of_garbage = models.TextField(max_length=255, blank=True)
     working_hours = models.CharField(max_length=100, blank=True)
     contact_email = models.EmailField(max_length=100, blank=True)
-    contact_phone = models.CharField(max_length=20, blank=True)
-    picture = models.ImageField (upload_to='static/images')
-    # Add more fields as needed
-    
+    contact_phone = models.IntegerField(max_length=10, blank=True)
+    picture = models.ImageField(upload_to='static/images')
+    background_image = models.ImageField(upload_to='static/images', default='yange.jpg')  # New field for background image
+
     def __str__(self):
         return self.name
+
     
 class CustomerRequest(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     location = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
-    phone_number = models.CharField(max_length=15)
-    payment_status = models.BooleanField(default=False)    
+    phone_number = models.IntegerField(max_length=10)
+    payment_status = models.BooleanField(default=False)   
+
+    def __str__(self) :
+        return self.name
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
