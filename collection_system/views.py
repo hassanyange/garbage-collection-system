@@ -10,6 +10,8 @@ from .models import UserProfile
 from .forms import UserProfileForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
+from .forms import CustomerRequestForm
+from .models import CustomerRequest
 
 @login_required
 def home(request):
@@ -32,6 +34,7 @@ def register_company(request):
     return render(request, 'register_company.html', {'form': form})
 
 @login_required
+
 def make_request(request):
     if request.method == 'POST':
         form = CustomerRequestForm(request.POST)
@@ -49,18 +52,34 @@ def make_request(request):
             # Redirect to payment page after request is made
             return redirect('payment', request_obj.pk)
     else:
-        form = CustomerRequestForm()
+        # Check if it's an update operation and pass the instance to the form
+        request_id = request.GET.get('request_id')
+        if request_id:
+            request_instance = get_object_or_404(CustomerRequest, pk=request_id)
+            form = CustomerRequestForm(instance=request_instance)
+        else:
+            form = CustomerRequestForm()
     return render(request, 'make_request.html', {'form': form})
+
 
 def payment(request, request_id):
     # Fetch the request object based on request_id
     request_obj = CustomerRequest.objects.get(pk=request_id)
-    # Logic to process payment
+
+    # Placeholder for payment processing logic
     if request.method == 'POST':
-        # Handle payment process
+        # Add your payment processing logic here
+        # For example:
+        # if payment_is_successful:
+        #     messages.success(request, 'Payment successful!')
+        # else:
+        #     messages.error(request, 'Payment failed. Please try again.')
+        #     return redirect('payment', request_id=request_id)
         messages.success(request, 'Payment successful!')
         return redirect('home')  # Redirect to home page after successful payment
+
     return render(request, 'payment.html', {'request_obj': request_obj})
+
 def company_detail(request, company_id):
     company = get_object_or_404(Company, id=company_id)
     return render(request, 'company_detail.html', {'company': company})

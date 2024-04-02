@@ -35,7 +35,6 @@ class CustomerRequest(models.Model):
     location = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=10, blank=True, validators=[RegexValidator(r'^\d{10}$', 'Enter a 10-digit phone number.')])
-    picture = models.ImageField(upload_to='static/images', default='yange.jpg')
     payment_status = models.BooleanField(default=False)   
 
     def __str__(self) :
@@ -47,3 +46,24 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
+    
+class District(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+class Ward(models.Model):
+    ward_name = models.CharField(max_length=255)
+    district = models.ForeignKey(District, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.ward_name
+
+class Street(models.Model):
+    street_name = models.CharField(max_length=255)
+    ward = models.ForeignKey(Ward, on_delete=models.CASCADE)
+    district = models.ForeignKey(District, on_delete=models.CASCADE) 
+
+    def __str__(self):
+        return self.street_name

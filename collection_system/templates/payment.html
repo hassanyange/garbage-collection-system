@@ -1,16 +1,42 @@
-<!-- payment.html -->
-{% extends 'base.html' %}
 {% load static %}
 {% block content %}
 <div class="container mt-4">
-  <h2>Payment for Garbage Collection Request</h2>
-  <p>Request Details:</p>
-  <p>Location: {{ request_obj.location }}</p>
-  <!-- Add other request details as needed -->
-  <form method="post">
-    {% csrf_token %}
-    <!-- Payment form fields go here -->
-    <button type="submit" class="btn btn-primary">Make Payment</button>
-  </form>
+  <h2 class="text-center mb-4">Payment for Garbage Collection Request</h2>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <p class="card-text"><strong>Request Details </strong></p>
+          <p class="card-text">Your Name: {{ request_obj.name }}</p>
+          <p class="card-text">Phone Number: {{ request_obj.phone_number}}</p>
+          <p class="card-text">District: {{ request_obj.district}}</p>
+         <p class="card-text">Ward: {{ request_obj.ward}}</p>
+          <p class="card-text">Street: {{ request_obj.street }}</p>
+         
+          <!-- Add other request details as needed -->
+
+          <form method="post">
+            {% csrf_token %}
+            <!-- Payment form fields go here -->
+            <div class="form-group">
+              <label for="card_number">Card Number</label>
+              <input type="text" class="form-control" id="card_number" name="card_number" placeholder="Enter your card number" required>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="expiration_date">Expiration Date</label>
+                <input type="text" class="form-control" id="expiration_date" name="expiration_date" placeholder="MM/YY" required>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="cvv">CVV</label>
+                <input type="text" class="form-control" id="cvv" name="cvv" placeholder="Enter CVV" required>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Make Payment</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

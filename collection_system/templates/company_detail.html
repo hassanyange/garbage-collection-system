@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-4" >
+<div class="container mt-4">
   <div class="row">
     <div class="col-md-8">
     
@@ -29,23 +29,22 @@
 
     <div class="col-md-4">
       <!-- Make Request Form -->
-      <h3>Make a Garbage Collection Request</h3>
-      <form method="post" action="{% url 'make_request' %}">
-        {% csrf_token %}
-        <div class="form-group">
-          <label for="location">Location</label>
-          <input type="text" class="form-control" id="location" name="location" required>
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">Make a Garbage Collection Request</h3>
+          <form method="post" action="{% url 'make_request' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary btn-block mt-3 position-relative">
+              Click Here
+              <span class="material-icons position-absolute end-0 top-50 translate-middle-y">
+                arrow_forward
+              </span>
+            </button>
+            
+          </form>
         </div>
-        <div class="form-group">
-          <label for="name">Your Name</label>
-          <input type="text" class="form-control" id="name" name="name" required>
-        </div>
-        <div class="form-group">
-          <label for="phone">Phone Number</label>
-          <input type="text" class="form-control" id="phone" name="phone_number" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit Request</button>
-      </form>
+      </div>
     </div>
   </div>
 </div>

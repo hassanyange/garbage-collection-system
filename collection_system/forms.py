@@ -1,7 +1,7 @@
 
 
 from django import forms
-from .models import Company, CustomerRequest, UserProfile, User
+from .models import Company, CustomerRequest, UserProfile, User, Ward, District, Street
 from django.contrib.auth.forms import UserCreationForm
 
 
@@ -14,10 +14,24 @@ class CompanyForm(forms.ModelForm):
         model = Company
         fields = ['name', 'location']
 
+from django import forms
+from .models import CustomerRequest, District, Ward, Street
+
 class CustomerRequestForm(forms.ModelForm):
+    district = forms.ModelChoiceField(queryset=District.objects.all(), empty_label="Select District")
+    ward = forms.ModelChoiceField(queryset=Ward.objects.all(), empty_label="Select Ward")
+    street = forms.ModelChoiceField(queryset=Street.objects.all(), empty_label="Select Street")
+
     class Meta:
         model = CustomerRequest
-        fields = ['location', 'name', 'phone_number']
+        fields = ['name', 'phone_number', 'district', 'ward', 'street']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            self.fields['ward'].queryset = Ward.objects.filter(district=self.instance.district)
+            self.fields['street'].queryset = Street.objects.filter(ward=self.instance.ward)
+
         
 class RegistrationForm(UserCreationForm):
     first_name = forms.CharField(max_length=100)
