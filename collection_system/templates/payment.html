@@ -1,6 +1,7 @@
+{% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<div class="container mt-4">
+<div class="container mt-4 mb-20"> <!-- Added mb-5 for margin bottom -->
   <h2 class="text-center mb-4">Payment for Garbage Collection Request</h2>
   <div class="row justify-content-center">
     <div class="col-md-6">
@@ -10,7 +11,7 @@
           <p class="card-text">Your Name: {{ request_obj.name }}</p>
           <p class="card-text">Phone Number: {{ request_obj.phone_number}}</p>
           <p class="card-text">District: {{ request_obj.district}}</p>
-         <p class="card-text">Ward: {{ request_obj.ward}}</p>
+          <p class="card-text">Ward: {{ request_obj.ward}}</p>
           <p class="card-text">Street: {{ request_obj.street }}</p>
          
           <!-- Add other request details as needed -->
@@ -32,7 +33,7 @@
                 <input type="text" class="form-control" id="cvv" name="cvv" placeholder="Enter CVV" required>
               </div>
             </div>
-            <button type="submit" class="btn btn-primary btn-block">Make Payment</button>
+            <button type="submit" class="btn btn-info btn-block">Make Payment</button>
           </form>
         </div>
       </div>
