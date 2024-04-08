@@ -8,13 +8,7 @@
       <div class="card mt-5">
         <div class="card-body">
           <h2 class="card-title text-center mb-4">Register</h2>
-          {% if messages %}
-            {% for message in messages %}
-              <div class="alert alert-success" role="alert">
-                {{ message }}
-              </div>
-            {% endfor %}
-          {% endif %}
+       
           <form method="post">
             {% csrf_token %}
             <div class="form-group">

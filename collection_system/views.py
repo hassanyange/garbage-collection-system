@@ -68,6 +68,7 @@ def home(request):
     return render(request, 'home.html', {'companies': companies})
 
 
+
 def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -78,7 +79,7 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, 'You have successfully logged in!')
-                return redirect('home')
+                return redirect('home')  # Redirect to home page after successful login
             else:
                 messages.error(request, 'Invalid username or password.')
     else:
@@ -86,17 +87,19 @@ def login_view(request):
     return render(request, 'login.html', {'form': form})
 
 
+from django.shortcuts import redirect
+
 def register_view(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
             messages.success(request, 'You have successfully registered!')
             return redirect('login')  # Redirect to login page after successful registration
     else:
         form = RegistrationForm()
     return render(request, 'register.html', {'form': form})
+
 
 
 def logout_view(request):
