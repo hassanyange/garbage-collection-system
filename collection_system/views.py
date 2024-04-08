@@ -13,27 +13,6 @@ from django.contrib.auth import authenticate, login
 from .forms import CustomerRequestForm
 from .models import CustomerRequest
 
-@login_required
-def home(request):
-    # Logic to display home page
-    return render(request, 'home.html')
-
-
-
-
-
-def register_company(request):
-    if request.method == 'POST':
-        form = CompanyForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Company registered successfully!')
-            return redirect('home')
-    else:
-        form = CompanyForm()
-    return render(request, 'register_company.html', {'form': form})
-
-@login_required
 
 def make_request(request):
     if request.method == 'POST':
@@ -83,7 +62,7 @@ def payment(request, request_id):
 def company_detail(request, company_id):
     company = get_object_or_404(Company, id=company_id)
     return render(request, 'company_detail.html', {'company': company})
-
+@login_required
 def home(request):
     companies = Company.objects.all()
     return render(request, 'home.html', {'companies': companies})
@@ -91,32 +70,34 @@ def home(request):
 
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            messages.success(request, 'You have successfully logged in!')
-            return redirect('home')
-        else:
-            messages.error(request, 'Invalid username or password.')
-    return render(request, 'login.html')
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, 'You have successfully logged in!')
+                return redirect('home')
+            else:
+                messages.error(request, 'Invalid username or password.')
+    else:
+        form = LoginForm()
+    return render(request, 'login.html', {'form': form})
+
 
 def register_view(request):
     if request.method == 'POST':
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
-        email = request.POST['email']
-        password = request.POST['password']
-        location = request.POST['location']
-        if User.objects.filter(email=email).exists():
-            messages.error(request, 'Email is already taken.')
-        else:
-            user = User.objects.create_user(username=email, email=email, password=password, first_name=first_name, last_name=last_name)
-            UserProfile.objects.create(user=user, location=location)
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
             messages.success(request, 'You have successfully registered!')
-            return redirect('login')
-    return render(request, 'register.html')
+            return redirect('login')  # Redirect to login page after successful registration
+    else:
+        form = RegistrationForm()
+    return render(request, 'register.html', {'form': form})
+
 
 def logout_view(request):
     logout(request)

@@ -7,13 +7,12 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
     path('home/', views.home, name='home'), 
-    path('register-company/', views.register_company, name='register_company'),
     path('make-request/', views.make_request, name='make_request'),
     path('payment/<int:request_id>/', views.payment, name='payment'),
     path('company/<int:company_id>/', views.company_detail, name='company_detail'),
     path('logout/', views.logout_view, name='logout'),
 
-    path('login/', LoginView.as_view(), name='login'),
-    path('logout/', LogoutView.as_view(), name='logout'),
+    # path('login/', LoginView.as_view(), name='login'),
+    # path('logout/', LogoutView.as_view(), name='logout'),
 ]
 
