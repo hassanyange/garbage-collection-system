@@ -14,30 +14,30 @@ from .forms import CustomerRequestForm
 from .models import CustomerRequest
 
 
+
 def make_request(request):
     if request.method == 'POST':
         form = CustomerRequestForm(request.POST)
         if form.is_valid():
             request_obj = form.save(commit=False)
-            # Check if the user is authenticated
             if request.user.is_authenticated:
                 request_obj.user = request.user
             else:
-                # Handle the case of an unauthenticated user
-                # For example, you can display an error message or redirect to another page
                 messages.error(request, 'Please log in to make a request.')
-                return redirect('home')  # Redirect the user to the home page
+                return redirect('home')
             request_obj.save()
-            # Redirect to payment page after request is made
-            return redirect('payment', request_obj.pk)
+            return redirect('payment', request_id=request_obj.pk)
+        else:
+            print("Form is not valid")
+            print(form.errors)
     else:
-        # Check if it's an update operation and pass the instance to the form
         request_id = request.GET.get('request_id')
         if request_id:
             request_instance = get_object_or_404(CustomerRequest, pk=request_id)
             form = CustomerRequestForm(instance=request_instance)
         else:
             form = CustomerRequestForm()
+    
     return render(request, 'make_request.html', {'form': form})
 
 
@@ -59,9 +59,13 @@ def payment(request, request_id):
 
     return render(request, 'payment.html', {'request_obj': request_obj})
 
+
+
 def company_detail(request, company_id):
     company = get_object_or_404(Company, id=company_id)
     return render(request, 'company_detail.html', {'company': company})
+
+
 @login_required
 def home(request):
     companies = Company.objects.all()

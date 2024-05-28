@@ -25,11 +25,20 @@ class CustomerRequestForm(forms.ModelForm):
         model = CustomerRequest
         fields = ['name', 'phone_number', 'district', 'ward', 'street']
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if self.instance.pk:
-            self.fields['ward'].queryset = Ward.objects.filter(district=self.instance.district)
-            self.fields['street'].queryset = Street.objects.filter(ward=self.instance.ward)
+    def clean(self):
+        cleaned_data = super().clean()
+        district = cleaned_data.get('district')
+        ward = cleaned_data.get('ward')
+        street = cleaned_data.get('street')
+
+        if district and ward and street:
+            if ward.district != district:
+                raise forms.ValidationError("The selected ward does not belong to the selected district.")
+            if street.ward != ward:
+                raise forms.ValidationError("The selected street does not belong to the selected ward.")
+        
+        return cleaned_data
+
 
         
 from django.contrib.auth.password_validation import validate_password

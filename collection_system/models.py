@@ -1,8 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
-
-
+from django.utils import timezone
 
 class CompanyProfile(models.Model):
     company_name = models.CharField(max_length=50)
@@ -24,20 +23,30 @@ class Company(models.Model):
     contact_email = models.EmailField(max_length=100, blank=True)
     contact_phone = models.CharField(max_length=10, blank=True, validators=[RegexValidator(r'^\d{10}$', 'Enter a 10-digit phone number.')])
     picture = models.ImageField(upload_to='static/images')
+    map_url = models.URLField(blank=True)
     background_image = models.ImageField(upload_to='static/images', default='yange.jpg')  # New field for background image
 
     def __str__(self):
         return self.name
 
     
+
 class CustomerRequest(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    location = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
-    phone_number = models.CharField(max_length=10, blank=True, validators=[RegexValidator(r'^\d{10}$', 'Enter a 10-digit phone number.')])
-    payment_status = models.BooleanField(default=False)   
+    phone_number = models.CharField(
+        max_length=10, 
+        blank=True, 
+        validators=[RegexValidator(r'^\d{10}$', 'Enter a 10-digit phone number.')]
+    )
+    district = models.ForeignKey('District', on_delete=models.CASCADE, null=True, blank=True)
+    ward = models.ForeignKey('Ward', on_delete=models.CASCADE, null=True, blank=True)
+    street = models.ForeignKey('Street', on_delete=models.CASCADE, null=True, blank=True)
+    payment_status = models.BooleanField(default=False)  
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(default=timezone.now)
 
-    def __str__(self) :
+    def __str__(self):
         return self.name
 
 class UserProfile(models.Model):
