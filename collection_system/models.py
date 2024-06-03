@@ -23,8 +23,8 @@ class Company(models.Model):
     contact_email = models.EmailField(max_length=100, blank=True)
     contact_phone = models.CharField(max_length=10, blank=True, validators=[RegexValidator(r'^\d{10}$', 'Enter a 10-digit phone number.')])
     picture = models.ImageField(upload_to='static/images')
-    map_url = models.URLField(blank=True)
-    background_image = models.ImageField(upload_to='static/images', default='yange.jpg')  # New field for background image
+    # map_url = models.URLField(blank=True)
+    # background_image = models.ImageField(upload_to='static/images', default='yange.jpg')  # New field for background image
 
     def __str__(self):
         return self.name
