@@ -1,38 +1,59 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<div class="container mt-4 mb-20"> <!-- Added mb-5 for margin bottom -->
+<div class="container mt-4 mb-5"> <!-- Adjusted margin bottom -->
   <h2 class="text-center mb-4">Payment for Garbage Collection Request</h2>
+  
+  {% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  
   <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card">
+    <div class="col-md-4">
+      <!-- Card for Mobile Money Option 1 -->
+      <div class="card mb-3" style="max-width: 18rem;">
+        <img src="{% static 'images/Airtel.jpg' %}" class="card-img-top" alt="Mobile Money Option 1" style="max-height: 200px;">
+        <div class="card-body">
+          <h5 class="card-title">Payment via Airtel Money</h5>
+          <p class="card-text">Click to proceed</p>
+          <button type="button" class="btn btn-info btn-block" onclick="showPaymentForm('mobile_money_option1')">Select Option Airtel</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4">
+      <!-- Card for Mobile Money Option 2 -->
+      <div class="card mb-4" style="max-width: 18rem;">
+        <img src="{% static 'images/Mpesa.png' %}" class="card-img-top" alt="Mobile Money Option 2" style="max-height: 200px;">
+        <div class="card-body">
+          <h5 class="card-title">Payment via M-pesa</h5>
+          <p class="card-text">Click to proceed</p>
+          <button type="button" class="btn btn-info btn-block" onclick="showPaymentForm('mobile_money_option2')">Select M-pesa</button>
+        </div>
+      </div>
+    </div> 
+    
+    <div class="col-md-4">
+      <!-- Payment Form -->
+      <div id="paymentForm" class="card" style="display: none;"> <!-- Initially hidden -->
         <div class="card-body">
           <p class="card-text"><strong>Request Details </strong></p>
           <p class="card-text">Your Name: {{ request_obj.name }}</p>
           <p class="card-text">Phone Number: {{ request_obj.phone_number}}</p>
-          <p class="card-text">District: {{ request_obj.district}}</p>
-          <p class="card-text">Ward: {{ request_obj.ward}}</p>
+          <p class="card-text">District: {{ request_obj.district }}</p>
+          <p class="card-text">Ward: {{ request_obj.ward }}</p>
           <p class="card-text">Street: {{ request_obj.street }}</p>
-         
-          <!-- Add other request details as needed -->
-
-          <form method="post">
+          <!-- Display cost for the request -->
+          <p class="card-text">Cost: 500 Tshs</p>
+          <!-- Payment form -->
+          <form id="paymentOptionForm" method="post">
             {% csrf_token %}
-            <!-- Payment form fields go here -->
-            <div class="form-group">
-              <label for="card_number">Card Number</label>
-              <input type="text" class="form-control" id="card_number" name="card_number" placeholder="Enter your card number" required>
-            </div>
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="expiration_date">Expiration Date</label>
-                <input type="text" class="form-control" id="expiration_date" name="expiration_date" placeholder="MM/YY" required>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="cvv">CVV</label>
-                <input type="text" class="form-control" id="cvv" name="cvv" placeholder="Enter CVV" required>
-              </div>
-            </div>
+            <input type="hidden" id="payment_option" name="payment_option" value="">
+            <!-- Additional fields for selected payment method if needed -->
             <button type="submit" class="btn btn-info btn-block">Make Payment</button>
           </form>
         </div>
@@ -40,4 +61,11 @@
     </div>
   </div>
 </div>
+
+<script>
+  function showPaymentForm(paymentOption) {
+    document.getElementById('payment_option').value = paymentOption;
+    document.getElementById('paymentForm').style.display = 'block';  // Show the payment form
+  }
+</script>
 {% endblock %}

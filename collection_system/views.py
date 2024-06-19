@@ -11,7 +11,8 @@ from .forms import UserProfileForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from .forms import CustomerRequestForm
-from .models import CustomerRequest
+from .models import CustomerRequest, Payment
+import uuid 
 
 
 
@@ -40,25 +41,34 @@ def make_request(request):
     
     return render(request, 'make_request.html', {'form': form})
 
-
 def payment(request, request_id):
-    # Fetch the request object based on request_id
-    request_obj = CustomerRequest.objects.get(pk=request_id)
+    request_obj = get_object_or_404(CustomerRequest, pk=request_id)
 
-    # Placeholder for payment processing logic
     if request.method == 'POST':
-        # Add your payment processing logic here
-        # For example:
-        # if payment_is_successful:
-        #     messages.success(request, 'Payment successful!')
-        # else:
-        #     messages.error(request, 'Payment failed. Please try again.')
-        #     return redirect('payment', request_id=request_id)
-        messages.success(request, 'Payment successful!')
-        return redirect('home')  # Redirect to home page after successful payment
+        # Generate a unique transaction ID (example using UUID)
+        transaction_id = uuid.uuid4().hex  # Generate a random UUID as transaction ID
+
+        amount = request_obj.cost  # Assuming cost is a field on CustomerRequest
+
+        try:
+            # Create Payment object
+            Payment.objects.create(
+                transaction_id=transaction_id,
+                payment_option=request.POST.get('payment_option'),
+                amount=amount,
+            )
+
+            # Optionally, update CustomerRequest payment_status
+            request_obj.payment_status = True
+            request_obj.save()
+
+            messages.success(request, 'Payment successful!')
+            return redirect('home')  # Redirect to home page after successful payment
+
+        except Exception as e:
+            messages.error(request, f'Failed to process payment: {str(e)}')
 
     return render(request, 'payment.html', {'request_obj': request_obj})
-
 
 
 def company_detail(request, company_id):
