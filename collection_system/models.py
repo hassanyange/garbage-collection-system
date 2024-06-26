@@ -77,6 +77,7 @@ class Street(models.Model):
 class Payment(models.Model):
     transaction_id = models.CharField(max_length=100)
     payment_option = models.CharField(max_length=100)
+    payment_number = models.CharField(max_length=100, default=1)  # Add this line
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=500.00)
     timestamp = models.DateTimeField(auto_now_add=True)
 

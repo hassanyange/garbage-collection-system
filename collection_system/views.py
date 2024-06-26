@@ -40,6 +40,10 @@ def make_request(request):
             form = CustomerRequestForm()
     
     return render(request, 'make_request.html', {'form': form})
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from .models import CustomerRequest, Payment
+import uuid
 
 def payment(request, request_id):
     request_obj = get_object_or_404(CustomerRequest, pk=request_id)
@@ -55,6 +59,7 @@ def payment(request, request_id):
             Payment.objects.create(
                 transaction_id=transaction_id,
                 payment_option=request.POST.get('payment_option'),
+                payment_number=request.POST.get('payment_number'),  # Include this line
                 amount=amount,
             )
 
@@ -63,7 +68,7 @@ def payment(request, request_id):
             request_obj.save()
 
             messages.success(request, 'Payment successful!')
-            return redirect('home')  # Redirect to home page after successful payment
+            return redirect('payment', request_id=request_id)  # Redirect to the payment page
 
         except Exception as e:
             messages.error(request, f'Failed to process payment: {str(e)}')

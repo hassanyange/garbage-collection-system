@@ -13,26 +13,24 @@
   {% endif %}
   
   <div class="row justify-content-center">
-    <div class="col-md-4">
+    <div class="col-md-4" id="mobile_money_airtel_card">
       <!-- Card for Mobile Money Option 1 -->
       <div class="card mb-3" style="max-width: 18rem;">
-        <img src="{% static 'images/Airtel.jpg' %}" class="card-img-top" alt="Mobile Money Option 1" style="max-height: 200px;">
+        <img src="{% static 'images/Airtel.jpg' %}" class="card-img-top" alt="Mobile Money Airtel" style="max-height: 200px;">
         <div class="card-body">
           <h5 class="card-title">Payment via Airtel Money</h5>
-          <p class="card-text">Click to proceed</p>
-          <button type="button" class="btn btn-info btn-block" onclick="showPaymentForm('mobile_money_option1')">Select Option Airtel</button>
+          <button type="button" class="btn btn-info btn-block" onclick="showPaymentForm('mobile_money_airtel')">Select Airtel Money</button>
         </div>
       </div>
     </div>
     
-    <div class="col-md-4">
+    <div class="col-md-4" id="mobile_money_Mpesa_card">
       <!-- Card for Mobile Money Option 2 -->
       <div class="card mb-4" style="max-width: 18rem;">
-        <img src="{% static 'images/Mpesa.png' %}" class="card-img-top" alt="Mobile Money Option 2" style="max-height: 200px;">
+        <img src="{% static 'images/Mpesa.png' %}" class="card-img-top" alt="Mobile Money Mpesa" style="max-height: 200px;">
         <div class="card-body">
           <h5 class="card-title">Payment via M-pesa</h5>
-          <p class="card-text">Click to proceed</p>
-          <button type="button" class="btn btn-info btn-block" onclick="showPaymentForm('mobile_money_option2')">Select M-pesa</button>
+          <button type="button" class="btn btn-info btn-block" onclick="showPaymentForm('mobile_money_Mpesa')">Select Mpesa</button>
         </div>
       </div>
     </div> 
@@ -41,9 +39,9 @@
       <!-- Payment Form -->
       <div id="paymentForm" class="card" style="display: none;"> <!-- Initially hidden -->
         <div class="card-body">
-          <p class="card-text"><strong>Request Details </strong></p>
+          <p class="card-text"><strong>Request Details</strong></p>
           <p class="card-text">Your Name: {{ request_obj.name }}</p>
-          <p class="card-text">Phone Number: {{ request_obj.phone_number}}</p>
+          <p class="card-text">Phone Number: {{ request_obj.phone_number }}</p>
           <p class="card-text">District: {{ request_obj.district }}</p>
           <p class="card-text">Ward: {{ request_obj.ward }}</p>
           <p class="card-text">Street: {{ request_obj.street }}</p>
@@ -52,8 +50,11 @@
           <!-- Payment form -->
           <form id="paymentOptionForm" method="post">
             {% csrf_token %}
+            <div class="form-group">
+              <label for="payment_number">Enter your payment number:</label>
+              <input type="text" class="form-control" id="payment_number" name="payment_number" required>
+            </div>
             <input type="hidden" id="payment_option" name="payment_option" value="">
-            <!-- Additional fields for selected payment method if needed -->
             <button type="submit" class="btn btn-info btn-block">Make Payment</button>
           </form>
         </div>
@@ -66,6 +67,13 @@
   function showPaymentForm(paymentOption) {
     document.getElementById('payment_option').value = paymentOption;
     document.getElementById('paymentForm').style.display = 'block';  // Show the payment form
+    
+    // Hide the other payment options
+    if (paymentOption === 'mobile_money_airtel') {
+      document.getElementById('mobile_money_airtel_card').style.display = 'none';
+    } else if (paymentOption === 'mobile_money_Mpesa') {
+      document.getElementById('mobile_money_Mpesa_card').style.display = 'none';
+    }
   }
 </script>
 {% endblock %}
