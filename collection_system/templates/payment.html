@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<div class="container mt-4 mb-5"> <!-- Adjusted margin bottom -->
+<div class="container mt-4 mb-5">
   <h2 class="text-center mb-4">Payment for Garbage Collection Request</h2>
   
   {% if messages %}
@@ -14,7 +14,6 @@
   
   <div class="row justify-content-center">
     <div class="col-md-4" id="mobile_money_airtel_card">
-      <!-- Card for Mobile Money Option 1 -->
       <div class="card mb-3" style="max-width: 18rem;">
         <img src="{% static 'images/Airtel.jpg' %}" class="card-img-top" alt="Mobile Money Airtel" style="max-height: 200px;">
         <div class="card-body">
@@ -25,7 +24,6 @@
     </div>
     
     <div class="col-md-4" id="mobile_money_Mpesa_card">
-      <!-- Card for Mobile Money Option 2 -->
       <div class="card mb-4" style="max-width: 18rem;">
         <img src="{% static 'images/Mpesa.png' %}" class="card-img-top" alt="Mobile Money Mpesa" style="max-height: 200px;">
         <div class="card-body">
@@ -36,26 +34,24 @@
     </div> 
     
     <div class="col-md-4">
-      <!-- Payment Form -->
-      <div id="paymentForm" class="card" style="display: none;"> <!-- Initially hidden -->
+      <div id="paymentForm" class="card" style="display: none;">
         <div class="card-body">
           <p class="card-text"><strong>Request Details</strong></p>
+          <p class="card-text">Control Number: <strong id="controlNumber">{{ control_number }}</strong></p>
           <p class="card-text">Your Name: {{ request_obj.name }}</p>
           <p class="card-text">Phone Number: {{ request_obj.phone_number }}</p>
           <p class="card-text">District: {{ request_obj.district }}</p>
           <p class="card-text">Ward: {{ request_obj.ward }}</p>
           <p class="card-text">Street: {{ request_obj.street }}</p>
-          <!-- Display cost for the request -->
           <p class="card-text">Cost: 500 Tshs</p>
-          <!-- Payment form -->
           <form id="paymentOptionForm" method="post">
             {% csrf_token %}
             <div class="form-group">
-              <label for="payment_number">Enter your payment number:</label>
+              <label for="payment_number">Enter your Token  number:</label>
               <input type="text" class="form-control" id="payment_number" name="payment_number" required>
             </div>
             <input type="hidden" id="payment_option" name="payment_option" value="">
-            <button type="submit" class="btn btn-info btn-block">Make Payment</button>
+            <button type="submit" class="btn btn-info btn-block">Submit Request</button>
           </form>
         </div>
       </div>
@@ -66,8 +62,8 @@
 <script>
   function showPaymentForm(paymentOption) {
     document.getElementById('payment_option').value = paymentOption;
-    document.getElementById('paymentForm').style.display = 'block';  // Show the payment form
-    
+    document.getElementById('paymentForm').style.display = 'block';
+
     // Hide the other payment options
     if (paymentOption === 'mobile_money_airtel') {
       document.getElementById('mobile_money_airtel_card').style.display = 'none';
@@ -75,5 +71,15 @@
       document.getElementById('mobile_money_Mpesa_card').style.display = 'none';
     }
   }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    {% if messages %}
+      {% for message in messages %}
+        {% if "Payment successful" in message %}
+          alert("{{ message }}");
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  });
 </script>
 {% endblock %}

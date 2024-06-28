@@ -45,6 +45,9 @@ from django.contrib import messages
 from .models import CustomerRequest, Payment
 import uuid
 
+import random
+import uuid
+
 def payment(request, request_id):
     request_obj = get_object_or_404(CustomerRequest, pk=request_id)
 
@@ -53,6 +56,9 @@ def payment(request, request_id):
         transaction_id = uuid.uuid4().hex  # Generate a random UUID as transaction ID
 
         amount = request_obj.cost  # Assuming cost is a field on CustomerRequest
+
+        # Generate a random control number
+        control_number = random.randint(100000, 999999)
 
         try:
             # Create Payment object
@@ -67,13 +73,19 @@ def payment(request, request_id):
             request_obj.payment_status = True
             request_obj.save()
 
-            messages.success(request, 'Payment successful!')
+            # Show a success message with the control number
+            messages.success(request, f'Payment successful!')
             return redirect('payment', request_id=request_id)  # Redirect to the payment page
 
         except Exception as e:
             messages.error(request, f'Failed to process payment: {str(e)}')
 
-    return render(request, 'payment.html', {'request_obj': request_obj})
+    else:
+        # Generate a control number when the payment page is initially loaded
+        control_number = random.randint(100000, 999999)
+
+    return render(request, 'payment.html', {'request_obj': request_obj, 'control_number': control_number})
+
 
 
 def company_detail(request, company_id):
@@ -115,6 +127,8 @@ def register_view(request):
             user = form.save()
             messages.success(request, 'You have successfully registered!')
             return redirect('login')  # Redirect to login page after successful registration
+        else:
+            messages.error(request, 'There was an error with your registration')
     else:
         form = RegistrationForm()
     return render(request, 'register.html', {'form': form})
