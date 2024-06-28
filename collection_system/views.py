@@ -40,6 +40,8 @@ def make_request(request):
             form = CustomerRequestForm()
     
     return render(request, 'make_request.html', {'form': form})
+
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from .models import CustomerRequest, Payment
@@ -74,8 +76,8 @@ def payment(request, request_id):
             request_obj.save()
 
             # Show a success message with the control number
-            messages.success(request, f'Payment successful!')
-            return redirect('payment', request_id=request_id)  # Redirect to the payment page
+            messages.success(request, f'Request submitted  successful!')
+            return redirect('home')  # Redirect to the payment page
 
         except Exception as e:
             messages.error(request, f'Failed to process payment: {str(e)}')

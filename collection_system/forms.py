@@ -3,6 +3,14 @@
 from django import forms
 from .models import Company, CustomerRequest, UserProfile, User, Ward, District, Street
 from django.contrib.auth.forms import UserCreationForm
+import re
+from django import forms
+from django.core.exceptions import ValidationError
+
+def validate_phone_number(value):
+    if not re.match(r'^[0-9]{10}$', value):
+        raise ValidationError('Phone number must be 10 digits.')
+
 
 
 class LoginForm(forms.Form):
@@ -15,11 +23,16 @@ class CompanyForm(forms.ModelForm):
         model = Company
         fields = ['name', 'location']
 
-
+        
 class CustomerRequestForm(forms.ModelForm):
     district = forms.ModelChoiceField(queryset=District.objects.all(), empty_label="Select District")
     ward = forms.ModelChoiceField(queryset=Ward.objects.all(), empty_label="Select Ward")
     street = forms.ModelChoiceField(queryset=Street.objects.all(), empty_label="Select Street")
+    phone_number = forms.CharField(
+        max_length=10,
+        validators=[validate_phone_number],
+        help_text='Enter a 10-digit phone number'
+    )
 
     class Meta:
         model = CustomerRequest
@@ -38,7 +51,6 @@ class CustomerRequestForm(forms.ModelForm):
                 raise forms.ValidationError("The selected street does not belong to the selected ward.")
         
         return cleaned_data
-
 
         
 from django.contrib.auth.password_validation import validate_password
@@ -76,6 +88,8 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['location'] 
+
+
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
