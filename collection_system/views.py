@@ -127,8 +127,13 @@ def register_view(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
+<<<<<<< HEAD
             form.save()
             messages.success(request, 'You have successfully registered!')
+=======
+            user = form.save()
+            messages.success(request, ' You have successfully registered!')
+>>>>>>> 35c7a7187ecc5c0a77540f514bfef15a6f8233b8
             return redirect('login')  # Redirect to login page after successful registration
         else:
             messages.error(request, 'There was an error with your registration')

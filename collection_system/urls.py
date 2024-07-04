@@ -11,8 +11,7 @@ urlpatterns = [
     path('payment/<int:request_id>/', views.payment, name='payment'),
     path('company/<int:company_id>/', views.company_detail, name='company_detail'),
     path('logout/', views.logout_view, name='logout'),
+    
 
-    # path('login/', LoginView.as_view(), name='login'),
-    # path('logout/', LogoutView.as_view(), name='logout'),
 ]
 
