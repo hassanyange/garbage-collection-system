@@ -12,16 +12,66 @@ def validate_phone_number(value):
         raise ValidationError('Phone number must be 10 digits.')
 
 
+class CompanyForm(forms.ModelForm):
+    class Meta:
+        model = Company
+        fields = ['name', 'location']
+
 
 class LoginForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Username'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
 
 
-class CompanyForm(forms.ModelForm):
+from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+
+class RegistrationForm(UserCreationForm):
+    first_name = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    last_name = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    username = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'class': 'form-control'})
+    )
+    location = forms.CharField(
+        max_length=255,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    password1 = forms.CharField(
+        label='Password',
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        validators=[validate_password]
+    )
+    password2 = forms.CharField(
+        label='Confirm Password',
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        validators=[validate_password]
+    )
+
     class Meta:
-        model = Company
-        fields = ['name', 'location']
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'location']
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Passwords do not match")
+        try:
+            validate_password(password1)
+        except ValidationError as e:
+            raise forms.ValidationError(e)
+        return password2
 
         
 class CustomerRequestForm(forms.ModelForm):
@@ -53,37 +103,6 @@ class CustomerRequestForm(forms.ModelForm):
         return cleaned_data
 
         
-from django.contrib.auth.password_validation import validate_password
-
-class RegistrationForm(UserCreationForm):
-    first_name = forms.CharField(max_length=100)
-    last_name = forms.CharField(max_length=100)
-    username = forms.CharField(max_length=100)
-    email = forms.EmailField()
-    location = forms.CharField(max_length=255)
-    password1 = forms.CharField(
-        label='Password',
-        widget=forms.PasswordInput,
-        validators=[validate_password]  # Ensure strong password
-    )
-    password2 = forms.CharField(
-        label='Confirm Password',
-        widget=forms.PasswordInput,
-        validators=[validate_password]  # Ensure strong password
-    )
-
-    class Meta:
-        model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'location']
-
-    def clean_password2(self):
-        # Check if passwords match
-        password1 = self.cleaned_data.get("password1")
-        password2 = self.cleaned_data.get("password2")
-        if password1 and password2 and password1 != password2:
-            raise forms.ValidationError("Passwords do not match")
-        return password2
-
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile

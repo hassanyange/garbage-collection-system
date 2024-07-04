@@ -122,11 +122,12 @@ def login_view(request):
 
 from django.shortcuts import redirect
 
+
 def register_view(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            form.save()
             messages.success(request, 'You have successfully registered!')
             return redirect('login')  # Redirect to login page after successful registration
         else:
